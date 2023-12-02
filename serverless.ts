@@ -1,14 +1,16 @@
 import type { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+// import hello from '@functions/hello';
+import * as functions from 'src/controllers/index';
 
 const serverlessConfiguration: AWS = {
   service: 'root-service',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    region: 'ap-south-1',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -19,7 +21,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { ...functions },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -32,6 +34,9 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
+    'serverless-offline': {
+      printOutput: true
+    }
   },
 };
 
